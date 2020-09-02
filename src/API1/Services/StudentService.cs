@@ -32,5 +32,10 @@ namespace API1.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<CourseResponse>> CoursesByStudent(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
