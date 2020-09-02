@@ -28,7 +28,7 @@ namespace API2
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowCouses",builder=>builder.WithOrigins("https://localhost:44321"));
+                options.AddPolicy("AllowStudents",builder=>builder.WithOrigins("https://localhost:44321"));
             });
 
             services.AddApplicationSetup();

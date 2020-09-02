@@ -1,47 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using API1.Models;
+using API1.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API1.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/students")]
     [ApiController]
     public class StudentsController : ControllerBase
     {
-        // GET: api/<StudentsController>
+        private readonly IStudentService _studentService;
+        public StudentsController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAll()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _studentService.GetAllStudents());
         }
 
-        // GET api/<StudentsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
-            return "value";
+            return Ok(await _studentService.GetStudentById(id));
         }
 
-        // POST api/<StudentsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Create([FromBody] Student request)
         {
+            var result = await _studentService.CreateStudentAsync(request);
+
+            if (result == 0)
+                return BadRequest(new { Error = "Sorry, there was a problem adding the student. Please try again" });
+
+            return Ok(new { StudentId = result });
         }
 
-        // PUT api/<StudentsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Student request)
         {
+            var result = await _studentService.UpdateStudent(request); ;
+
+            if (result)
+                return NoContent();
+
+            return BadRequest(new { Error = "Sorry, there was a problem updating the student. Please try again" });
         }
 
-        // DELETE api/<StudentsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
+            var result = await _studentService.DeleteStudent(id); ;
+
+            if (result)
+                return NoContent();
+
+            return BadRequest(new { Error = "Sorry, there was a problem deleting the student. Please try again" });
+        }
+
+        [HttpGet("courses/{id}")]
+       
+        public async Task<IActionResult> GetCourses([FromRoute] int id)
+        {
+            return Ok(await _studentService.CoursesByStudent(id));
         }
     }
 }

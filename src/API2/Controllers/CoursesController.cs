@@ -1,47 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using API2.Application.Courses.Commands.CreateCourse;
+using API2.Application.Courses.Commands.DeleteCourse;
+using API2.Application.Courses.Commands.UpdateCourse;
+using API2.Application.Courses.Queries.GetCourses;
+using MediatR;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/courses")]
+    [EnableCors("AllowStudents")]
     [ApiController]
     public class CoursesController : ControllerBase
     {
-        // GET: api/<CoursesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IMediator _mediator;
+        public CoursesController(IMediator mediator)
         {
-            return new string[] { "value1", "value2" };
+            _mediator = mediator;
         }
-
-        // GET api/<CoursesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody] CreateCourse command)
         {
-            return "value";
+            var value = await _mediator.Send(command);
+            return Ok(value);
         }
-
-        // POST api/<CoursesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPut("update")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Update([FromBody] UpdateCourse command)
         {
+            await _mediator.Send(command);
+            return NoContent();
         }
-
-        // PUT api/<CoursesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpDelete("delete")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Delete([FromBody] DeleteCourse command)
         {
+            await _mediator.Send(command);
+            return NoContent();
         }
-
-        // DELETE api/<CoursesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpGet("courses/{id:int}")]
+        public async Task<ActionResult<CoursesVm>> GetFlashCards(int id)
         {
+            var vm = await _mediator.Send(new GetCourses() { StudentId = id});
+            return Ok(vm);
         }
     }
 }
