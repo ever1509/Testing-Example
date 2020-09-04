@@ -28,8 +28,7 @@ namespace API2.Setups
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //services.AddTransient<IIdentityService, IdentityService>();
-            //services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddTransient<IIdentityService, IdentityService>();
 
             return services;
         }

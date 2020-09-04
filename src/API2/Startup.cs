@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using API2.Setups;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace API2
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -31,6 +33,8 @@ namespace API2
                 options.AddPolicy("AllowStudents",builder=>builder.WithOrigins("https://localhost:44321"));
             });
 
+            services.AddJwtConfiguration(Configuration);
+            services.AddSwaggerConfiguration();
             services.AddApplicationSetup();
             services.AddInfrastructureSetup(Configuration);
 
@@ -47,7 +51,18 @@ namespace API2
 
             app.UseRouting();
 
+            app.UseCors("AllowStudents");
+
             app.UseAuthorization();
+
+            app.UseAuthentication();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/DemoAPI/swagger.json", "Demo API v1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

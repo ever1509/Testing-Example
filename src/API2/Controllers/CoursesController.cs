@@ -42,8 +42,8 @@ namespace API2.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
-        [HttpGet("courses/{id:int}")]
-        public async Task<ActionResult<CoursesVm>> GetFlashCards(int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<CoursesVm>> GetCourses(int id)
         {
             var vm = await _mediator.Send(new GetCourses() { StudentId = id});
             return Ok(vm);

@@ -1,41 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using API1.Models;
+using API1.Models.Contexts;
+using Microsoft.AspNetCore.Routing.Tree;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace API1.Services
 {
     public class StudentService :IStudentService
     {
-        public Task<int> CreateStudentAsync(Student entity)
+        private readonly ApplicationDbContext _context;
+        private readonly API2Service _client;
+
+        public StudentService(ApplicationDbContext context, API2Service client)
         {
-            throw new NotImplementedException();
+            _context = context;
+            _client = client;
+        }
+        public async Task<int> CreateStudentAsync(Student entity)
+        {
+            var e = new Student()
+            {
+               Name = entity.Name,
+               LastName = entity.LastName,
+               Age = entity.Age,
+               DateBirth = entity.DateBirth,
+               Email = entity.Email,
+               Phone = entity.Phone,
+            };
+
+            _context.Students.Add(entity);
+
+            await _context.SaveChangesAsync();
+
+            return e.StudentId;
         }
 
-        public Task<List<Student>> GetAllStudents()
+        public async Task<List<Student>> GetAllStudents()
         {
-            throw new NotImplementedException();
+            return  await _context.Students
+                .ToListAsync();
         }
 
-        public Task<Student> GetStudentById(int id)
+        public async Task<Student> GetStudentById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Students
+                .SingleOrDefaultAsync(e => e.StudentId == id);
         }
 
-        public Task<bool> UpdateStudent(Student entity)
+        public async Task<bool> UpdateStudent(Student entity)
         {
-            throw new NotImplementedException();
+            var e = await _context.Students.SingleOrDefaultAsync(c => c.StudentId == entity.StudentId);
+
+            if (entity == null)
+                throw new Exception($"{typeof(Student)} entity does'nt exist with the id {entity.StudentId}");
+
+            e.Name = entity.Name;
+            e.LastName = entity.LastName;
+            e.Age = entity.Age;
+            e.DateBirth = entity.DateBirth;
+            e.Email = entity.Email;
+            e.Phone = entity.Phone;
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public Task<bool> DeleteStudent(int id)
+        public async Task<bool> DeleteStudent(int id)
         {
-            throw new NotImplementedException();
+            var entity = await _context.Students.FindAsync(id);
+
+            if (entity == null)
+                throw new Exception($"{typeof(Student)} not found with the Id {id}");
+
+            _context.Students.Remove(entity);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public Task<List<CourseResponse>> CoursesByStudent(int id)
+        public async  Task<List<CourseResponse>> CoursesByStudent(int id)
         {
-            throw new NotImplementedException();
+            return await _client.GetCoursesByStudent(id);
         }
     }
 }

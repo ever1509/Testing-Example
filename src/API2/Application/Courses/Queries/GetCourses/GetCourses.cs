@@ -40,6 +40,7 @@ namespace API2.Application.Courses.Queries.GetCourses
             {
                 var courses = await _context.Courses
                     .Where(c => c.StudentId == request.StudentId)
+                    .Include(c=>c.Instructor)
                     .ProjectTo<CourseDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
                 
