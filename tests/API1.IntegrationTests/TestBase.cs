@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API1.IntegrationTests
 {
-    public class TestBase
+    public class TestBase :IDisposable
     {
         public IContainer Container;
 
@@ -73,6 +73,11 @@ namespace API1.IntegrationTests
 
             return container;
 
+        }
+
+        public void Dispose()
+        {
+            Container?.Dispose();
         }
     }
 }

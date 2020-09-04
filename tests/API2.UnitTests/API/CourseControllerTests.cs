@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using API2.Application.Courses.Commands.CreateCourse;
@@ -15,6 +16,7 @@ using Xunit;
 
 namespace API2.UnitTests.API
 {
+    [ExcludeFromCodeCoverage]
     public class CourseControllerTests :ControllerTestBase
     {
         [Fact]

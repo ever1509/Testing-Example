@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Xunit;
 
 namespace API1.IntegrationTests.API
 {
+    [ExcludeFromCodeCoverage]
     public class StudentControllerTests: TestBase
     {
         private ApplicationDbContext _dbContext;
@@ -30,6 +32,7 @@ namespace API1.IntegrationTests.API
             result.Should().NotBeNull();
             var r = (OkObjectResult) result;
             r.Value.Should().BeOfType<List<Student>>();
+            Container.Dispose();
         }
 
         [Fact]
@@ -46,6 +49,7 @@ namespace API1.IntegrationTests.API
             var r = (OkObjectResult) result;
 
             r.Value.Should().BeOfType<Student>();
+            Container.Dispose();
         }
 
         [Fact]
@@ -71,6 +75,7 @@ namespace API1.IntegrationTests.API
             students.Should().HaveCountLessOrEqualTo(3);
             students.Last().Name.Should().Be(student.Name);
             students.Last().LastName.Should().Be(student.LastName);
+            Container.Dispose();
         }
 
     }
