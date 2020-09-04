@@ -1,0 +1,20 @@
+﻿[
+  {
+    "StudentId": 1,
+    "Name": "Test",
+    "LastName": "Test",
+    "DateOfBirth": "2018-10-25T16:19:07.4919366+00:00",
+    "Age": 20,
+    "Phone": "22222222",
+    "Email": "test@test.com" 
+  },
+  {
+    "StudentId": 2,
+    "Name": "Tes2t",
+    "LastName": "Test2",
+    "DateOfBirth": "2018-10-25T16:19:07.4919366+00:00",
+    "Age": 20,
+    "Phone": "22222222",
+    "Email": "test@test.com"
+  }
+]

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace API1.Services
 {
-    public class API2Service
+    public class API2Service:IAPI2Service
     {
         private readonly HttpClient _client;
 
